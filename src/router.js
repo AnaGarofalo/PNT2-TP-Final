@@ -1,12 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Formulario from "./components/Formulario.vue";
-import Usuarios from "./components/Usuarios.vue";
+import Login from "./views/Login.vue";
 
 const routes = [
-  { path: "/", redirect: "/formulario" },
+  { path: "/", redirect: "/login" },
 
-  { path: "/formulario", component: Formulario },
-  { path: "/usuarios", component: Usuarios },
+  { path: "/login", component: Login },
+  // { path: "/usuarios", component: Usuarios },
 
   { path: "/:pathmatch(.*)*", redirect: "/" },
 ];

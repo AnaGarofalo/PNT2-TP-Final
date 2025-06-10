@@ -17,14 +17,14 @@
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <RouterLink class="nav-link" to="/formulario"
               >Formulario</RouterLink
             >
-          </li>
-          <li class="nav-item">
+          </li> -->
+          <!-- <li class="nav-item">
             <RouterLink class="nav-link" to="/usuarios">Usuarios</RouterLink>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>

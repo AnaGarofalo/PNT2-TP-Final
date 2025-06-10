@@ -1,5 +1,5 @@
 <template>
-  <Navbar />
+  <Navbar v-if="$route.path !== '/login'" />
   <RouterView />
 </template>
 
@@ -10,6 +10,12 @@ export default {
   name: "app",
   components: {
     Navbar,
+  },
+  mounted() {},
+  data() {
+    return {
+      route: this.$route.path,
+    };
   },
 };
 </script>
