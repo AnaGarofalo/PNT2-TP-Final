@@ -10,10 +10,13 @@ export default class AuthService {
 
   login = async ({ email, password }) => {
     try {
-      const { data: user } = await axios.post(this.#url, { email, password });
-      return user;
+      const { data: response } = await axios.post(this.#url + "/login", {
+        email,
+        password,
+      });
+      return response;
     } catch (error) {
-      console.error("Error productos POST", error);
+      return error.response.data;
     }
   };
 }

@@ -12,23 +12,36 @@
           <input
             id="email"
             type="text"
-            :class="['form-control', formErrors.email && 'is-invalid']"
+            :class="['form-control', !!formErrors.email && 'is-invalid']"
             v-model.trim="formData.email"
-            @input="formDirty.email = true"
+            @input="
+              () => {
+                formDirty.email = true;
+                loginError = '';
+              }
+            "
             placeholder="user@mail.com"
           />
+          <p v-if="!!formErrors.email" class="form-text text-danger">
+            {{ formErrors.email }}
+          </p>
         </div>
 
         <!-- password -->
         <div class="form-group">
           <label for="nombre">Password</label>
-          <div class="input-group mb-3">
+          <div class="input-group">
             <input
               id="nombre"
               :type="showPassword ? 'text' : 'password'"
-              :class="['form-control', formErrors.password && 'is-invalid']"
+              :class="['form-control', !!formErrors.password && 'is-invalid']"
               v-model.trim="formData.password"
-              @input="formDirty.password = true"
+              @input="
+                () => {
+                  formDirty.password = true;
+                  loginError = '';
+                }
+              "
               placeholder="************"
             />
             <button
@@ -41,10 +54,29 @@
               ></i>
             </button>
           </div>
+          <p v-if="!!formErrors.password" class="form-text text-danger">
+            {{ formErrors.password }}
+          </p>
+        </div>
+
+        <div
+          v-if="loginError"
+          class="alert alert-danger d-flex align-items-center gap-2"
+          role="alert"
+        >
+          <i class="bi bi-exclamation-triangle"></i>
+          <div>{{ loginError }}</div>
         </div>
 
         <!-- botón de login -->
         <button class="btn mt-3" :disabled="!isValidForm">Sign In</button>
+        <p>
+          Don't have an account yet?<RouterLink
+            class="link-opacity-50"
+            :to="signUpPath"
+            >Sign up!</RouterLink
+          >
+        </p>
       </form>
     </div>
   </section>
@@ -52,6 +84,9 @@
 
 <script>
 import AuthService from "../services/AuthService.js";
+import { useUserStore } from "../store/userStore.js";
+import { RoutesDefinition } from "../router.js";
+
 export default {
   name: "login",
   props: [],
@@ -59,6 +94,8 @@ export default {
   data() {
     return {
       authService: new AuthService(),
+      userStore: useUserStore(),
+      signUpPath: RoutesDefinition.signup.path,
       formData: {
         email: "",
         password: "",
@@ -68,28 +105,50 @@ export default {
         password: false,
       },
       showPassword: false,
+      loginError: "",
     };
   },
   methods: {
     async onSubmit() {
-      await this.authService.login(this.formData);
+      const response = await this.authService.login(this.formData);
+      if (response.success) {
+        this.userStore.setUser(response.message);
+        this.$router.push(RoutesDefinition.home.path);
+      } else {
+        this.loginError = response.message;
+      }
     },
   },
   computed: {
     formErrors() {
       return {
-        email: !this.isValidEmail && this.formDirty.email,
-        password: !this.isValidPassword && this.formDirty.password,
+        email: this.formDirty.email ? this.isValidEmail.errorMessage : "",
+        password: this.formDirty.password
+          ? this.isValidPassword.errorMessage
+          : "",
       };
     },
     isValidEmail() {
-      return !!this.formData.email;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      let errorMessage = "";
+      if (!this.formData.email) {
+        errorMessage = "Email is required";
+      } else if (!emailRegex.test(this.formData.email)) {
+        errorMessage = "Email is invalid";
+      }
+
+      return { isValid: !errorMessage, errorMessage };
     },
     isValidPassword() {
-      return !!this.formData.password;
+      let errorMessage = "";
+
+      if (!this.formData.password) {
+        errorMessage = "Password is required";
+      }
+      return { isValid: !errorMessage, errorMessage };
     },
     isValidForm() {
-      return this.isValidEmail && this.isValidPassword;
+      return this.isValidEmail.isValid && this.isValidPassword.isValid;
     },
   },
 };
