@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-2">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="container-fluid">
       <RouterLink class="navbar-brand" to="/">Bienvenidos!</RouterLink>
 
@@ -27,13 +27,30 @@
           </li> -->
         </ul>
       </div>
+
+      <button class="btn btn-danger" @click="logout()">Logout</button>
     </div>
   </nav>
 </template>
 
 <script>
+import { useUserStore } from "../store/userStore.js";
+import { RoutesDefinition } from "../router.js";
+
 export default {
   name: "navbar",
+  data() {
+    return {
+      userStore: useUserStore(),
+    };
+  },
+  methods: {
+    logout() {
+      document.cookie = "token=; Max-Age=0; path=/";
+      this.userStore.removeUser();
+      this.$router.push(RoutesDefinition.login.path);
+    },
+  },
 };
 </script>
 
