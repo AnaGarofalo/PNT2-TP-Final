@@ -1,14 +1,21 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useUserStore } from "./store/userStore";
 import Login from "./views/Login.vue";
 import SignUp from "./views/SignUp.vue";
 import Home from "./views/Home.vue";
-import { useUserStore } from "./store/userStore";
+import GameDetail from "./views/GameDetail.vue";
 
 export const RoutesDefinition = {
   home: {
     path: "/home",
     component: Home,
     requiresLogin: true,
+  },
+  gameDetail: {
+    path: "/game/:id",
+    component: GameDetail,
+    requiresLogin: true,
+    generatePath: (id) => "/game/" + id,
   },
   login: {
     path: "/login",

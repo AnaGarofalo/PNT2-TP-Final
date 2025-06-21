@@ -15,4 +15,13 @@ export default class GameService {
       return error.response.data;
     }
   };
+
+  getById = async (id) => {
+    try {
+      const { data } = await axios.get(this.#prefix + "/" + id);
+      return data.message;
+    } catch (error) {
+      return error.response.data;
+    }
+  };
 }

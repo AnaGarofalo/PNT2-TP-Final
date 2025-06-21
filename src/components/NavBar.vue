@@ -1,7 +1,7 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-md navbar-dark my-navbar">
     <div class="container-fluid">
-      <RouterLink class="navbar-brand" to="/">Bienvenidos!</RouterLink>
+      <RouterLink class="navbar-brand my-link" to="/">Home</RouterLink>
 
       <button
         class="navbar-toggler"
@@ -54,4 +54,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.my-navbar {
+  background-color: var(--purple-dark);
+}
+
+.my-link {
+  color: var(--accent-beige);
+}
+</style>

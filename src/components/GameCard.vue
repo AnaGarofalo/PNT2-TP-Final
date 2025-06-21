@@ -1,25 +1,35 @@
 <template>
-  <section class="card game-card">
-    <div class="card-body" :style="{ backgroundImage: `url(${game.image})` }">
+  <section class="card game-card" @click="navigateToGameDetail(game.id)">
+    <div
+      class="card-body"
+      :style="{ backgroundImage: `url(${game.image})` }"
+    ></div>
+    <div class="card-footer">
       <h3 class="game-title">{{ game.title }}</h3>
+      <Stars :score="game.averageScore" />
     </div>
   </section>
 </template>
 
 <script>
-import GameService from "../services/GameService.js";
+import Stars from "../components/Stars.vue";
+import { RoutesDefinition } from "../router.js";
+
 export default {
   name: "gameCard",
   props: ["game"],
-  mounted() {
-    console.log("Datos recibidos por gameCard:", this.game);
+  components: {
+    Stars,
   },
+  mounted() {},
   data() {
-    return {
-      gameService: new GameService(),
-    };
+    return {};
   },
-  methods: {},
+  methods: {
+    navigateToGameDetail(id) {
+      this.$router.push(RoutesDefinition.gameDetail.generatePath(id));
+    },
+  },
   computed: {},
 };
 </script>
@@ -29,38 +39,46 @@ export default {
   position: relative;
   width: 20rem;
   height: 25rem;
-  border: solid 1px rgba(0, 0, 0, 0.945);
+  border: solid 2px rgba(0, 0, 0, 0.945);
+  background-color: var(--purple-dark);
 }
 .card-body {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
   border: solid 1px rgba(0, 0, 0, 0.945);
+  filter: grayscale(75%);
+  border-radius: 4px 4px 0px 0px;
+  border: none;
+}
+
+.game-card:hover .card-body {
+  filter: grayscale(0%);
 }
 
 .game-card:hover {
   transform: scale(1.03);
   transition: all ease-in-out 200ms;
+  border-color: var(--accent-pink);
+  box-shadow: 0px 0px 43px -8px var(--accent-pink);
+  cursor: pointer;
 }
 
 .game-title {
-  color: transparent;
   transition: all ease-in-out 200ms;
-  position: absolute;
-  padding: 5px;
-  bottom: 0px;
-  left: 0px;
+  margin-bottom: 0px;
   width: 100%;
+  color: var(--accent-green);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 800;
+  font-size: 24px;
 }
 
 .game-card:hover .game-title {
-
-  color: rgb(255, 255, 255);
-  text-shadow: 0px 0px 2px rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.488);
-  border: solid 1px rgba(255, 255, 255, 0.096);
+  text-shadow: 0px 0px 2px var(--accent-beige);
   transition: all ease-in-out 200ms;
 }
-
-
 </style>
