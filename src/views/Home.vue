@@ -1,7 +1,6 @@
 <template>
   <section class="row m-0 fluid-container">
-    <div class="col bg-primary side-bar">SideBar</div>
-
+    <SideBar />
     <div
       class="col d-flex flex-wrap justify-content-around p-3 gap-3 games-container"
     >
@@ -18,10 +17,12 @@
 <script>
 import GameService from "../services/GameService.js";
 import GameCard from "../components/GameCard.vue";
+import SideBar from "../components/SideBar.vue";
 export default {
   name: "home",
   components: {
     GameCard,
+    SideBar
   },
   props: [],
   mounted() {
@@ -41,17 +42,18 @@ export default {
 </script>
 
 <style scoped>
-.side-bar {
-  max-width: 14rem;
-  height: 100%;
-  position: fixed;
-}
+
 
 .games-container {
-  background-color: pink;
+  background-color: rgb(32, 32, 32);
   margin-left: 14rem;
   height: 100%;
   max-height: 100%;
   overflow: auto;
+  
 }
+.games-container:hover .game-card:not(:hover){
+  filter: grayscale(75%);
+}
+
 </style>
