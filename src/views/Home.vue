@@ -1,6 +1,17 @@
 <template>
-  <section class="row m-0 fluid-container">
-    <SideBar :selectedName="selectedName" :setSelectedName="setSelectedName" />
+  <section
+    class="row m-0 fluid-container home-background"
+    :style="{ backgroundImage: `url(${backgroundImage})` }"
+  >
+    <SideBar
+      :selectedName="selectedName"
+      :setSelectedName="setSelectedName"
+      :selectedGenres="selectedGenres"
+      :setSelectedGenres="setSelectedGenres"
+      :selectedScore="selectedScore"
+      :setSelectedScore="setSelectedScore"
+      :clearFilters="clearFilters"
+    />
     <div
       class="col d-flex flex-wrap justify-content-around p-3 gap-3 games-container align-items-center"
     >
@@ -30,6 +41,8 @@ import GameService from "../services/GameService.js";
 import GameCard from "../components/GameCard.vue";
 import TextButton from "../components/TextButton.vue";
 import SideBar from "../components/SideBar.vue";
+import backgroundImage from "@/assets/background-image.png";
+
 export default {
   name: "home",
   components: {
@@ -45,6 +58,7 @@ export default {
   },
   data() {
     return {
+      backgroundImage,
       gameService: new GameService(),
       games: [],
       genres: [],
@@ -63,14 +77,45 @@ export default {
     setSelectedName(event) {
       this.selectedName = event.target.value;
     },
+    setSelectedGenres(genres) {
+      this.selectedGenres = genres;
+    },
+    setSelectedScore(score) {
+      this.selectedScore = score;
+    },
     filterByName(arr) {
       if (!this.selectedName.length) return arr;
-      else return arr.filter((game) => game.title.includes(this.selectedName));
+      else
+        return arr.filter((game) =>
+          game.title.toLowerCase().includes(this.selectedName.toLowerCase())
+        );
+    },
+    filterByGenre(games) {
+      if (!this.selectedGenres.length) return games;
+      else
+        return games.filter((game) => {
+          const gameGenresIds = game.Genres.map((genre) => genre.id);
+          return this.selectedGenres.every((item) =>
+            gameGenresIds.includes(item)
+          );
+        });
+    },
+    filterByScore(games) {
+      if (!this.selectedScore) return games;
+      else
+        return games.filter(
+          (game) =>
+            game.averageScore >= this.selectedScore &&
+            game.averageScore < this.selectedScore + 1
+        );
     },
   },
   computed: {
     filteredGames() {
-      return this.filterByName(this.games);
+      const filteredByName = this.filterByName(this.games);
+      const filteredByGenre = this.filterByGenre(filteredByName);
+      const filteredByScore = this.filterByScore(filteredByGenre);
+      return filteredByScore;
     },
   },
 };
@@ -78,7 +123,6 @@ export default {
 
 <style scoped>
 .games-container {
-  background-color: var(--accent-beige);
   margin-left: 14rem;
   height: 100%;
   max-height: 100%;

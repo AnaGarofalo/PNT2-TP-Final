@@ -4,7 +4,7 @@
     :style="{
       height: !isUnlogedRoute ? 'calc(100vh - 56px)' : '100vh',
       marginTop: !isUnlogedRoute ? '56px' : '0px',
-      overflow: 'hidden',
+      overflow: 'auto',
     }"
   />
 </template>

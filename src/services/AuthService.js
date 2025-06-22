@@ -19,4 +19,21 @@ export default class AuthService {
       return error.response.data;
     }
   };
+
+  createAndLogin = async ({ email, password, name }) => {
+    try {
+      const { data: response } = await axios.post(
+        this.#prefix + "/create-and-login",
+        {
+          email,
+          password,
+          name,
+        }
+      );
+
+      return response;
+    } catch (error) {
+      return error.response.data;
+    }
+  };
 }

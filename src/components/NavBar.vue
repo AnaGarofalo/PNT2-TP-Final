@@ -3,32 +3,19 @@
     <div class="container-fluid">
       <RouterLink class="navbar-brand my-link" to="/">Home</RouterLink>
 
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <!-- <li class="nav-item">
-            <RouterLink class="nav-link" to="/formulario"
-              >Formulario</RouterLink
-            >
-          </li> -->
-          <!-- <li class="nav-item">
-            <RouterLink class="nav-link" to="/usuarios">Usuarios</RouterLink>
-          </li> -->
-        </ul>
+      <div v-if="user" class="d-flex gap-3 align-items-center">
+        <div class="d-flex gap-1 align-items-center">
+          <div
+            class="profile-picture"
+            :style="{ backgroundImage: `url(${user.profilePicture})` }"
+          ></div>
+          <p class="username">{{ user.name }}</p>
+        </div>
+        <button class="btn secondary-button" @click="logout()">
+          <i class="bi bi-door-closed"></i>
+          Logout
+        </button>
       </div>
-
-      <button class="btn btn-danger" @click="logout()">Logout</button>
     </div>
   </nav>
 </template>
@@ -42,6 +29,7 @@ export default {
   data() {
     return {
       userStore: useUserStore(),
+      user: null,
     };
   },
   methods: {
@@ -50,6 +38,9 @@ export default {
       this.userStore.removeUser();
       this.$router.push(RoutesDefinition.login.path);
     },
+  },
+  mounted() {
+    this.user = this.userStore.getUser;
   },
 };
 </script>
@@ -61,5 +52,19 @@ export default {
 
 .my-link {
   color: var(--accent-beige);
+}
+
+.username {
+  color: var(--accent-beige);
+  margin: 0px;
+}
+
+.profile-picture {
+  width: 36px;
+  height: 36px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 50%;
 }
 </style>

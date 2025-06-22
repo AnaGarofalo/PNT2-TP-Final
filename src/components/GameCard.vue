@@ -7,6 +7,11 @@
     <div class="card-footer">
       <h3 class="game-title">{{ game.title }}</h3>
       <Stars :score="game.averageScore" />
+      <div
+        class="d-flex flex-wrap gap-1 align-items-center justify-content-around mt-2"
+      >
+        <GenreChip v-for="genre of game.Genres" :title="genre.title" />
+      </div>
     </div>
   </section>
 </template>
@@ -14,12 +19,14 @@
 <script>
 import Stars from "../components/Stars.vue";
 import { RoutesDefinition } from "../router.js";
+import GenreChip from "./GenreChip.vue";
 
 export default {
   name: "gameCard",
   props: ["game"],
   components: {
     Stars,
+    GenreChip,
   },
   mounted() {},
   data() {
